@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/contest_service.iml" filepath="$PROJECT_DIR$/.idea/modules/contest_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pizza_service.iml" filepath="$PROJECT_DIR$/.idea/modules/pizza_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/reactive-programming-with-akka.iml" filepath="$PROJECT_DIR$/.idea/modules/reactive-programming-with-akka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/reactive-programming-with-akka-build.iml" filepath="$PROJECT_DIR$/.idea/modules/reactive-programming-with-akka-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user_service.iml" filepath="$PROJECT_DIR$/.idea/modules/user_service.iml" />
+    </modules>
+  </component>
+</project>
