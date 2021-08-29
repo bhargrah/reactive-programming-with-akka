@@ -1,10 +1,11 @@
 package com.akka.fundamentals.actors
 
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, DeadLetter, Props}
 import com.akka.fundamentals.actors.requests.{MargheritaRequest, MarinaraRequest, PizzaException, StopPizzaBaking}
 
 /**
-Description : This example illustrate what happens when a actor dies and incoming messages moves to dead letter
+Description : This example illustrate what happens when a actor dies and incoming messages moves to dead letter.
+              Listener can be configured to read from dead letter and do any post processing
  **/
 
 class PizzaDeadLetter extends Actor with ActorLogging {
@@ -31,7 +32,15 @@ class PizzaDeadLetter extends Actor with ActorLogging {
   override def postStop() = log.info("Pizza Request Finished ")
 }
 
-object TestPizzaDeadLetterActor {
+// this call illustrate as to how we can read from dead letter
+class PizzaDeadLetterListener extends Actor with ActorLogging{
+
+  def receive = {
+    case deadletter: DeadLetter => log.info(s"Unprocessed pizza request $deadletter")
+  }
+}
+
+  object TestPizzaDeadLetterActor {
   def main(args: Array[String]): Unit = {
 
     val system = ActorSystem("PizzaSystem")
@@ -41,6 +50,10 @@ object TestPizzaDeadLetterActor {
     pizza ! StopPizzaBaking
     pizza ! MargheritaRequest // will be moved to dead letter as actor is dead
     pizza ! MarinaraRequest // will be moved to dead letter as actor is dead
+
+    // this will read dead letter messages , above two messages will printed
+    val pizzaDeadletters = system.actorOf(Props[PizzaDeadLetterListener])
+    system.eventStream.subscribe(pizzaDeadletters, classOf[DeadLetter])
 
     system.terminate()
   }
