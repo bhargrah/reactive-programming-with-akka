@@ -3,6 +3,10 @@ package com.akka.fundamentals.actors
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import com.akka.fundamentals.actors.requests.{MargheritaRequest, MarinaraRequest, PizzaException, StopPizzaBaking}
 
+/**
+Description : This example illustrate what happens when a actor dies and incoming messages moves to dead letter
+ **/
+
 class PizzaDeadLetter extends Actor with ActorLogging {
 
   override def preStart() = log.info("Pizza Request Received ")
@@ -11,7 +15,7 @@ class PizzaDeadLetter extends Actor with ActorLogging {
     case MarinaraRequest => log.info("I have a Marinara request!")
     case MargheritaRequest => log.info("I have a Margherita request!")
     case PizzaException => throw new Exception("Pizza fried!")
-    case StopPizzaBaking => context.stop(self)
+    case StopPizzaBaking => context.stop(self) // this will stop the actor
   }
 
   override def preRestart(reason: Throwable, message: Option[Any]) = {
@@ -35,8 +39,8 @@ object TestPizzaDeadLetterActor {
 
     pizza ! MarinaraRequest
     pizza ! StopPizzaBaking
-    pizza ! MargheritaRequest
-    pizza ! MarinaraRequest
+    pizza ! MargheritaRequest // will be moved to dead letter as actor is dead
+    pizza ! MarinaraRequest // will be moved to dead letter as actor is dead
 
     system.terminate()
   }

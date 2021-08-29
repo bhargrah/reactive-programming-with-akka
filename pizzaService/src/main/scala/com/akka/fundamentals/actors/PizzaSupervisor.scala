@@ -1,8 +1,13 @@
 package com.akka.fundamentals.actors
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
-import com.akka.fundamentals.actors.requests.{ExtraCheese, Jalapeno, MargheritaRequest, MarinaraRequest}
+import com.akka.fundamentals.actors.requests.{ExtraCheese, Jalapeno, MargheritaRequest, MarinaraRequest, PizzaException}
 
+/**
+Description : This example illustrate how we can define a supervisor and child actor delegation
+ **/
+
+// Child Actor
 class PizzaToppings extends Actor{
   def receive = {
     case ExtraCheese => println("Aye! Extra cheese it is")
@@ -10,9 +15,10 @@ class PizzaToppings extends Actor{
   }
 }
 
+// Supervisor Actor
 class PizzaSupervisor extends Actor {
 
-  // child actor created
+  // Child actor created
   val pizzaToppings =context.actorOf(Props[PizzaToppings], "PizzaToppings")
 
   def receive = {
@@ -21,24 +27,21 @@ class PizzaSupervisor extends Actor {
       println(pizzaToppings.path)
       pizzaToppings ! ExtraCheese
 
-    case MargheritaRequest =>
-      println("I have a Margherita request!")
+    case MargheritaRequest => println("I have a Margherita request!")
 
-    case _    =>
-      throw new Exception("Pizza fried!")
+    case PizzaException => throw new Exception("Pizza fried!")
   }
 }
 
   object TestActorPath {
    def main(args: Array[String]): Unit = {
 
-     // actor system
-    val system = ActorSystem("Pizza")
+    val system = ActorSystem("Pizza")      // actor system
 
      // ref for actor , no direct interaction , kind of handle
     val pizza: ActorRef =  system.actorOf(Props[PizzaSupervisor], "PizzaSupervisor")
 
-     println(pizza.path)
+     println(pizza.path) // prints the actor system paths
 
     pizza ! MarinaraRequest
     system.terminate()

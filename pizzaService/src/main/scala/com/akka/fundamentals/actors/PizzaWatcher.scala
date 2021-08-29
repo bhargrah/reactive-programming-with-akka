@@ -3,6 +3,10 @@ package com.akka.fundamentals.actors
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props, Terminated}
 import com.akka.fundamentals.actors.requests.{MargheritaRequest, MarinaraRequest, PizzaException, PoisonPill}
 
+/**
+Description : This example illustrate how we can configure a watcher actor for any other actor created
+ **/
+
 class PizzaActor extends Actor with ActorLogging {
 
   override def preStart() = {

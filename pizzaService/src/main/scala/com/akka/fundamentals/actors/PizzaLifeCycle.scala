@@ -3,6 +3,11 @@ package com.akka.fundamentals.actors
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import com.akka.fundamentals.actors.requests.{MargheritaRequest, MarinaraRequest, PizzaException}
 
+/**
+Description : This example illustrate lifecycle method for actors.
+ **/
+
+// This class extends Actor along with ActorLogging to get logger handler
 class PizzaLifeCycle extends Actor with ActorLogging {
 
   override def preStart() = log.info("Pizza Request Received ")
@@ -32,8 +37,9 @@ object TestPizzaLifeCycleActor {
     val system = ActorSystem("PizzaSystem")
     val pizza: ActorRef =  system.actorOf(Props[PizzaLifeCycle], "PizzaLifeCycle")
 
+    // Orchestration of load simulation
     pizza ! MarinaraRequest
-    pizza ! PizzaException
+    pizza ! PizzaException   // this will cause an exception in pizza workflow
     pizza ! MargheritaRequest
     pizza ! MarinaraRequest
 
